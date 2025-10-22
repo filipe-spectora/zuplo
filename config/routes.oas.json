@@ -4,5 +4,57 @@
     "version": "1.0.0",
     "title": "My Zuplo API"
   },
-  "paths": {}
+  "paths": {
+    "/v2/public/inspections/{slug}": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "get": {
+        "summary": "Public - Get Inspection",
+        "description": "",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "urlForwardHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "baseUrl": "https://spectora-filipe.sa.ngrok.io/api"
+            }
+          },
+          "policies": {
+            "inbound": []
+          }
+        },
+        "operationId": "new-route-d615a71c"
+      }
+    },
+    "/v2/inspections": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "get": {
+        "summary": "List Inspections (v2)",
+        "description": "",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "urlForwardHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "baseUrl": "${env.BASE_URL}/api"
+            }
+          },
+          "policies": {
+            "inbound": [
+              "api-key-inbound",
+              "rate-limit-inbound",
+              "set-secret-key-header",
+              "set-profile-headers"
+            ]
+          }
+        },
+        "operationId": "new-route-8f476660"
+      }
+    }
+  }
 }
