@@ -1,3 +1,53 @@
 {
-  "policies": []
+  "policies": [
+    {
+      "handler": {
+        "export": "ApiKeyInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "allowUnauthenticatedRequests": false,
+          "cacheTtlSeconds": 60
+        }
+      },
+      "name": "api-key-inbound",
+      "policyType": "api-key-inbound"
+    },
+    {
+      "handler": {
+        "export": "RateLimitInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "rateLimitBy": "user",
+          "requestsAllowed": 2,
+          "timeWindowMinutes": 1
+        }
+      },
+      "name": "rate-limit-inbound",
+      "policyType": "rate-limit-inbound"
+    },
+    {
+      "handler": {
+        "export": "SetHeadersInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "headers": [
+            {
+              "name": "X-Zuplo-Secret-Key",
+              "value": "$env(SECRET_KEY)"
+            }
+          ]
+        }
+      },
+      "name": "set-secret-key-header",
+      "policyType": "set-headers-inbound"
+    },
+    {
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/set-profile-headers)"
+      },
+      "name": "set-profile-headers",
+      "policyType": "custom-code-inbound"
+    }
+  ]
 }
