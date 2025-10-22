@@ -18,7 +18,7 @@
         "module": "$import(@zuplo/runtime)",
         "options": {
           "rateLimitBy": "user",
-          "requestsAllowed": 2,
+          "requestsAllowed": 3,
           "timeWindowMinutes": 1
         }
       },
