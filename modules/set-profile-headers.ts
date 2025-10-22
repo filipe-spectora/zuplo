@@ -8,8 +8,8 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   context.log.info(`Profile Type: ${profile_type}`);
 
   if (profile_id && profile_type) {
-    request.headers.set("X-Spectora-Profile-ID", profile_id)
-    request.headers.set("X-Spectora-Profile-Type", profile_type)
+    request.headers.set("X-Spectora-Profile-ID", profile_id);
+    request.headers.set("X-Spectora-Profile-Type", profile_type);
 
     return request;
   }
