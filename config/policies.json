@@ -48,32 +48,6 @@
       },
       "name": "set-profile-headers",
       "policyType": "custom-code-inbound"
-    },
-    {
-      "handler": {
-        "export": "ReplaceStringOutboundPolicy",
-        "module": "$import(@zuplo/runtime)",
-        "options": {
-          "match": "https://spectora-filipe.sa.ngrok.io",
-          "mode": "string",
-          "replaceWith": "$env(BASE_URL)"
-        }
-      },
-      "name": "replace-string-outbound",
-      "policyType": "replace-string-outbound"
-    },
-    {
-      "handler": {
-        "export": "ReplaceStringOutboundPolicy",
-        "module": "$import(@zuplo/runtime)",
-        "options": {
-          "match": "$env(BASE_URL)/api",
-          "mode": "string",
-          "replaceWith": "${host}"
-        }
-      },
-      "name": "replace-string-outbound-1",
-      "policyType": "replace-string-outbound"
     }
   ]
 }
