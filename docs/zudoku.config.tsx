@@ -74,16 +74,11 @@ const config: ZudokuConfig = {
     },
   ],
   authentication: {
-    // IMPORTANT: This is a demo Auth0 configuration.
-    // In a real application, you should replace these values with your own
-    // identity provider's configuration.
-    // This configuration WILL NOT WORK with custom domains.
-    // For more information, see:
-    // https://zuplo.com/docs/dev-portal/zudoku/configuration/authentication
-    type: "auth0",
-    domain: "auth.zuplo.site",
-    clientId: "f8I87rdsCRo4nU2FHf0fHVwA9P7xi7Ml",
-    audience: "https://api.example.com/",
+    type: "openid",
+    clientId:
+      "6d931bf2cbe451c206120aaf31c9ae5752468650353174ac97142e05982da529",
+    issuer: "https://localhost.spectora.com:3000",
+    scopes: ["openid", "profile", "email"],
   },
   apiKeys: {
     enabled: true,
