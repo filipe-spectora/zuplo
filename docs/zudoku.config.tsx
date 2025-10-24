@@ -75,13 +75,13 @@ const config: ZudokuConfig = {
   ],
   authentication: {
     type: "openid",
-    clientId:
-      "6d931bf2cbe451c206120aaf31c9ae5752468650353174ac97142e05982da529",
-    issuer: "https://localhost.spectora.com:3000",
+    clientId: process.env.ZUDOKU_PUBLIC_CLIENT_ID!,
+    issuer: process.env.ZUDOKU_PUBLIC_ISSUER!,
     scopes: ["openid", "profile", "email"],
   },
   apiKeys: {
     enabled: true,
+    // deploymentName: process.env.ZUDOKU_PUBLIC_DEPLOYMENT_NAME!,
   },
 };
 
