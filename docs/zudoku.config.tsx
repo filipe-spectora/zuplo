@@ -141,6 +141,10 @@ const config: ZudokuConfig = {
       return;
     },
     getConsumers: async ({ context, auth }) => {
+      console.log("--------> GET CONSUMERS");
+      console.log("--------> CONTEXT:", JSON.stringify(context));
+      console.log("--------> AUTH:", JSON.stringify(auth));
+
       return [];
     },
   },

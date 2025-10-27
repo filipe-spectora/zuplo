@@ -10,6 +10,8 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   const userEmail = request.user?.data?.email || request.user?.email;
   const userName = request.user?.data?.name || request.user?.name;
 
+  console.log("-------------> USER:", JSON.stringify(request.user));
+
   if (!sub) {
     return new Response(JSON.stringify({ error: "User not authenticated" }), {
       status: 401,
