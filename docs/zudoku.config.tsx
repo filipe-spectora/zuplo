@@ -92,6 +92,21 @@ const config: ZudokuConfig = {
         import.meta.env.ZUPLO_SERVER_URL ||
         `https://${deploymentName}.zuplo.site`;
 
+      // Get the JWT token from the auth provider data
+      // The ID token is what contains the user claims and should be used for API authentication
+      const jwtToken =
+        (auth as any).providerData?.idToken || (auth as any).accessToken;
+
+      console.log("--------> JWT TOKEN:", jwtToken);
+      console.log("--------> API KEY:", apiKey);
+      console.log("--------> CONTEXT:", JSON.stringify(context));
+      console.log("--------> AUTH:", JSON.stringify(auth));
+
+      if (!jwtToken) {
+        console.error("No JWT token available from auth provider", auth);
+        throw new Error("Authentication token not found");
+      }
+
       const createApiKeyRequest = new Request(
         serverUrl + "/v1/developer/api-key",
         {
@@ -107,13 +122,14 @@ const config: ZudokuConfig = {
           }),
           headers: {
             "Content-Type": "application/json",
+            // Include the JWT token in the Authorization header
+            Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
 
-      const createApiKey = await fetch(
-        await context.signRequest(createApiKeyRequest)
-      );
+      // Don't use context.signRequest() as we need to pass the user's JWT token
+      const createApiKey = await fetch(createApiKeyRequest);
 
       if (!createApiKey.ok) {
         const errorText = await createApiKey.text();
