@@ -40,6 +40,8 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   }
 
   try {
+    console.log("-------------> USER:", JSON.stringify(request.user));
+
     // Create a consumer with an API key using the Zuplo Management API
     const response = await fetch(
       `https://dev.zuplo.com/v1/accounts/${accountName}/key-buckets/${bucketName}/consumers?with-api-key=true`,
@@ -53,7 +55,7 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
           name: crypto.randomUUID(),
           managers: [
             {
-              email: userEmail || "nobody@example.com",
+              email: userEmail || "hello@example.com",
               sub: sub,
             },
           ],
@@ -106,7 +108,12 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
       email: userEmail,
     });
 
-    return new Response(JSON.stringify(result), {
+    // return new Response(JSON.stringify(result), {
+    //   status: 200,
+    //   headers: { "Content-Type": "application/json" },
+    // });
+
+    return new Response(JSON.stringify(request.user), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });
