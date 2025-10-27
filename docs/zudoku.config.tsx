@@ -147,12 +147,12 @@ const config: ZudokuConfig = {
               spectora_profile_type,
             },
             tags: {
-              spectora_company_id,
+              // Zuplo expects keys as camelCase
+              spectoraCompanyId: spectora_company_id,
             },
           }),
           headers: {
             "Content-Type": "application/json",
-            // Include the JWT token in the Authorization header
             Authorization: `Bearer ${jwtToken}`,
           },
         }
@@ -171,9 +171,10 @@ const config: ZudokuConfig = {
       return;
     },
     getConsumers: async ({ context, auth }) => {
-      console.log("--------> GET CONSUMERS");
-      console.log("--------> CONTEXT:", JSON.stringify(context));
-      console.log("--------> AUTH:", JSON.stringify(auth));
+      console.log("--------> GET CONSUMERS (TO BE IMPLEMENTED", {
+        context,
+        auth,
+      });
 
       return [];
     },
