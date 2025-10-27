@@ -101,7 +101,6 @@ const config: ZudokuConfig = {
         throw new Error("Authentication token not found");
       }
 
-      // Fetch additional user info from the userinfo endpoint to get additional data
       let spectora_profile_id = 0;
       let spectora_profile_type = 0;
       let spectora_company_id = 0;
