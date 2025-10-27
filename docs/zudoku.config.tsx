@@ -97,21 +97,50 @@ const config: ZudokuConfig = {
       const jwtToken =
         (auth as any).providerData?.idToken || (auth as any).accessToken;
 
-      console.log("--------> JWT TOKEN:", jwtToken);
-      console.log("--------> API KEY:", apiKey);
-      console.log("--------> CONTEXT:", JSON.stringify(context));
-      console.log("--------> AUTH:", JSON.stringify(auth));
+      const accessToken = (auth as any).providerData?.accessToken;
 
-      console.log(
-        "--------> PROVIDER DATA:",
-        JSON.stringify(auth.providerData)
-      );
-      console.log("--------> PROFILE:", JSON.stringify(auth.profile));
-      console.log("--------> EMAIL:", auth.profile?.email);
+      console.log("--------> JWT TOKEN:", jwtToken);
+      console.log("--------> ACCESS TOKEN:", accessToken);
 
       if (!jwtToken) {
         console.error("No JWT token available from auth provider", auth);
         throw new Error("Authentication token not found");
+      }
+
+      // Fetch additional user info from the userinfo endpoint to get profile_id and profile_type
+      let spectora_profile_id = 0;
+      let spectora_profile_type = 0;
+      let spectora_company_id = 0;
+
+      if (accessToken) {
+        try {
+          const userInfoResponse = await fetch(
+            `${process.env.ZUDOKU_PUBLIC_ISSUER}/oauth/userinfo`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (userInfoResponse.ok) {
+            const userInfo = await userInfoResponse.json();
+            console.log("--------> USER INFO:", JSON.stringify(userInfo));
+
+            // Extract profile_id and profile_type from userinfo response
+            spectora_profile_id = userInfo.profile_id;
+            spectora_profile_type = userInfo.profile_type;
+            spectora_company_id = userInfo.company_id;
+          } else {
+            console.warn(
+              "Failed to fetch userinfo:",
+              await userInfoResponse.text()
+            );
+          }
+        } catch (error) {
+          console.warn("Error fetching userinfo:", error);
+          // Continue without profile metadata if fetch fails
+        }
       }
 
       const createApiKeyRequest = new Request(
@@ -122,9 +151,11 @@ const config: ZudokuConfig = {
             ...apiKey,
             email: auth.profile?.email,
             metadata: {
-              userId: auth.profile?.sub,
-              name: auth.profile?.name,
-              email: auth.profile?.email,
+              spectora_profile_id,
+              spectora_profile_type,
+            },
+            tags: {
+              spectora_company_id,
             },
           }),
           headers: {

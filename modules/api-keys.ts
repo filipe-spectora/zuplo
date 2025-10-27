@@ -21,7 +21,6 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   const body = await request.json();
 
   const userEmail = body.email;
-  const userName = body.metadata?.name;
 
   // Validate required environment variables
   if (!accountName || !bucketName || !environment.ZP_DEVELOPER_API_KEY) {
@@ -62,16 +61,10 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
           ],
           description: body.description || "API Key",
           tags: {
-            sub: sub,
-            email: userEmail,
-            name: userName,
-            createdAt: new Date().toISOString(),
+            ...body.tags,
           },
           metadata: {
             ...body.metadata,
-            userId: sub,
-            email: userEmail,
-            name: userName,
           },
           // Handle expiration if provided
           ...(body.expiresOn && { expiresOn: body.expiresOn }),
