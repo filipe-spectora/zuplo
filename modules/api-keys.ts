@@ -53,10 +53,10 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
           Authorization: `Bearer ${environment.ZP_DEVELOPER_API_KEY}`,
         },
         body: JSON.stringify({
-          name: crypto.randomUUID(),
+          name: `inspector-${crypto.randomUUID()}`,
           managers: [
             {
-              email: body.email || userEmail || "hello@example.com",
+              email: userEmail,
               sub: sub,
             },
           ],
