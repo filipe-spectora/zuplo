@@ -102,6 +102,13 @@ const config: ZudokuConfig = {
       console.log("--------> CONTEXT:", JSON.stringify(context));
       console.log("--------> AUTH:", JSON.stringify(auth));
 
+      console.log(
+        "--------> PROVIDER DATA:",
+        JSON.stringify(auth.providerData)
+      );
+      console.log("--------> PROFILE:", JSON.stringify(auth.profile));
+      console.log("--------> EMAIL:", auth.profile?.email);
+
       if (!jwtToken) {
         console.error("No JWT token available from auth provider", auth);
         throw new Error("Authentication token not found");
