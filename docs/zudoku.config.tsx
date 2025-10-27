@@ -92,6 +92,48 @@ const config: ZudokuConfig = {
         import.meta.env.ZUPLO_SERVER_URL ||
         `https://${deploymentName}.zuplo.site`;
 
+      // Get the JWT token from the auth provider data
+      const jwtToken = (auth as any).providerData?.idToken;
+      const accessToken = (auth as any).providerData?.accessToken;
+
+      if (!jwtToken) {
+        console.error("No JWT token available from auth provider", auth);
+        throw new Error("Authentication token not found");
+      }
+
+      let spectora_profile_id = 0;
+      let spectora_profile_type = 0;
+      let spectora_company_id = 0;
+
+      if (accessToken) {
+        try {
+          const userInfoResponse = await fetch(
+            `${process.env.ZUDOKU_PUBLIC_ISSUER}/oauth/userinfo`,
+            {
+              headers: {
+                Authorization: `Bearer ${accessToken}`,
+              },
+            }
+          );
+
+          if (userInfoResponse.ok) {
+            const userInfo = await userInfoResponse.json();
+
+            spectora_profile_id = userInfo.profile_id;
+            spectora_profile_type = userInfo.profile_type;
+            spectora_company_id = userInfo.company_id;
+          } else {
+            console.warn(
+              "Failed to fetch userinfo:",
+              await userInfoResponse.text()
+            );
+          }
+        } catch (error) {
+          console.warn("Error fetching userinfo:", error);
+          // Continue without profile metadata if fetch fails
+        }
+      }
+
       const createApiKeyRequest = new Request(
         serverUrl + "/v1/developer/api-key",
         {
@@ -100,20 +142,23 @@ const config: ZudokuConfig = {
             ...apiKey,
             email: auth.profile?.email,
             metadata: {
-              userId: auth.profile?.sub,
-              name: auth.profile?.name,
-              email: auth.profile?.email,
+              spectora_profile_id,
+              spectora_profile_type,
+            },
+            tags: {
+              // Zuplo expects keys as camelCase
+              spectoraCompanyId: spectora_company_id,
             },
           }),
           headers: {
             "Content-Type": "application/json",
+            Authorization: `Bearer ${jwtToken}`,
           },
         }
       );
 
-      const createApiKey = await fetch(
-        await context.signRequest(createApiKeyRequest)
-      );
+      // Don't use context.signRequest() as we need to pass the user's JWT token
+      const createApiKey = await fetch(createApiKeyRequest);
 
       if (!createApiKey.ok) {
         const errorText = await createApiKey.text();
@@ -125,6 +170,11 @@ const config: ZudokuConfig = {
       return;
     },
     getConsumers: async ({ context, auth }) => {
+      console.log("--------> GET CONSUMERS (TO BE IMPLEMENTED", {
+        context,
+        auth,
+      });
+
       return [];
     },
   },

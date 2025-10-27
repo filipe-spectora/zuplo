@@ -7,8 +7,6 @@ const bucketName = environment.ZP_API_KEY_SERVICE_BUCKET_NAME;
 export default async function (request: ZuploRequest, context: ZuploContext) {
   // Extract user information from the authenticated request
   const sub = request.user?.sub;
-  const userEmail = request.user?.data?.email || request.user?.email;
-  const userName = request.user?.data?.name || request.user?.name;
 
   if (!sub) {
     return new Response(JSON.stringify({ error: "User not authenticated" }), {
@@ -17,8 +15,16 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
     });
   }
 
-  // Get the request body
   const body = await request.json();
+
+  const userEmail = body.email;
+  const profileId = body.metadata?.spectora_profile_id;
+  const profileType = body.metadata?.spectora_profile_type?.toLowerCase();
+
+  const apiKeyName =
+    profileId && profileType
+      ? `${profileType}-${profileId}`
+      : crypto.randomUUID();
 
   // Validate required environment variables
   if (!accountName || !bucketName || !environment.ZP_DEVELOPER_API_KEY) {
@@ -48,25 +54,19 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
           Authorization: `Bearer ${environment.ZP_DEVELOPER_API_KEY}`,
         },
         body: JSON.stringify({
-          name: crypto.randomUUID(),
+          name: apiKeyName,
           managers: [
             {
-              email: userEmail || "nobody@example.com",
+              email: userEmail,
               sub: sub,
             },
           ],
           description: body.description || "API Key",
           tags: {
-            sub: sub,
-            email: userEmail,
-            name: userName,
-            createdAt: new Date().toISOString(),
+            ...body.tags,
           },
           metadata: {
             ...body.metadata,
-            userId: sub,
-            email: userEmail,
-            name: userName,
           },
           // Handle expiration if provided
           ...(body.expiresOn && { expiresOn: body.expiresOn }),
