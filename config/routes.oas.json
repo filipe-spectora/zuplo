@@ -5,6 +5,30 @@
     "title": "My Zuplo API"
   },
   "paths": {
+    "/v1/developer/api-key": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "post": {
+        "summary": "Create API Key",
+        "description": "Creates a new API key for the authenticated user",
+        "x-zuplo-route": {
+          "corsPolicy": "anything-goes",
+          "handler": {
+            "export": "default",
+            "module": "$import(./modules/api-keys)",
+            "options": {}
+          },
+          "policies": {
+            "inbound": [
+              "open-id-jwt-auth-inbound"
+            ]
+          }
+        },
+        "operationId": "create-api-key-endpoint",
+        "x-internal": true
+      }
+    },
     "/v2/inspections": {
       "x-zuplo-path": {
         "pathMode": "open-api"
