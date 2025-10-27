@@ -7,8 +7,6 @@ const bucketName = environment.ZP_API_KEY_SERVICE_BUCKET_NAME;
 export default async function (request: ZuploRequest, context: ZuploContext) {
   // Extract user information from the authenticated request
   const sub = request.user?.sub;
-  const userEmail = request.user?.data?.email || request.user?.email;
-  const userName = request.user?.data?.name || request.user?.name;
 
   console.log("-------------> USER:", JSON.stringify(request.user));
 
@@ -21,6 +19,9 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
 
   // Get the request body
   const body = await request.json();
+
+  const userEmail = body.email;
+  const userName = body.metadata?.name;
 
   // Validate required environment variables
   if (!accountName || !bucketName || !environment.ZP_DEVELOPER_API_KEY) {
