@@ -8,8 +8,6 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   // Extract user information from the authenticated request
   const sub = request.user?.sub;
 
-  console.log("-------------> USER:", JSON.stringify(request.user));
-
   if (!sub) {
     return new Response(JSON.stringify({ error: "User not authenticated" }), {
       status: 401,
@@ -17,10 +15,16 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
     });
   }
 
-  // Get the request body
   const body = await request.json();
 
   const userEmail = body.email;
+  const profileId = body.metadata?.spectora_profile_id;
+  const profileType = body.metadata?.spectora_profile_type?.toLowerCase();
+
+  const apiKeyName =
+    profileId && profileType
+      ? `${profileType}-${profileId}`
+      : crypto.randomUUID();
 
   // Validate required environment variables
   if (!accountName || !bucketName || !environment.ZP_DEVELOPER_API_KEY) {
@@ -40,8 +44,6 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   }
 
   try {
-    console.log("-------------> USER:", JSON.stringify(request.user));
-
     // Create a consumer with an API key using the Zuplo Management API
     const response = await fetch(
       `https://dev.zuplo.com/v1/accounts/${accountName}/key-buckets/${bucketName}/consumers?with-api-key=true`,
@@ -52,7 +54,7 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
           Authorization: `Bearer ${environment.ZP_DEVELOPER_API_KEY}`,
         },
         body: JSON.stringify({
-          name: `inspector-${crypto.randomUUID()}`,
+          name: apiKeyName,
           managers: [
             {
               email: userEmail,
@@ -102,12 +104,7 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
       email: userEmail,
     });
 
-    // return new Response(JSON.stringify(result), {
-    //   status: 200,
-    //   headers: { "Content-Type": "application/json" },
-    // });
-
-    return new Response(JSON.stringify(request.user), {
+    return new Response(JSON.stringify(result), {
       status: 200,
       headers: { "Content-Type": "application/json" },
     });

@@ -93,21 +93,15 @@ const config: ZudokuConfig = {
         `https://${deploymentName}.zuplo.site`;
 
       // Get the JWT token from the auth provider data
-      // The ID token is what contains the user claims and should be used for API authentication
-      const jwtToken =
-        (auth as any).providerData?.idToken || (auth as any).accessToken;
-
+      const jwtToken = (auth as any).providerData?.idToken;
       const accessToken = (auth as any).providerData?.accessToken;
-
-      console.log("--------> JWT TOKEN:", jwtToken);
-      console.log("--------> ACCESS TOKEN:", accessToken);
 
       if (!jwtToken) {
         console.error("No JWT token available from auth provider", auth);
         throw new Error("Authentication token not found");
       }
 
-      // Fetch additional user info from the userinfo endpoint to get profile_id and profile_type
+      // Fetch additional user info from the userinfo endpoint to get additional data
       let spectora_profile_id = 0;
       let spectora_profile_type = 0;
       let spectora_company_id = 0;
@@ -125,9 +119,7 @@ const config: ZudokuConfig = {
 
           if (userInfoResponse.ok) {
             const userInfo = await userInfoResponse.json();
-            console.log("--------> USER INFO:", JSON.stringify(userInfo));
 
-            // Extract profile_id and profile_type from userinfo response
             spectora_profile_id = userInfo.profile_id;
             spectora_profile_type = userInfo.profile_type;
             spectora_company_id = userInfo.company_id;
