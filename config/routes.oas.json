@@ -79,46 +79,9 @@
             }
           },
           {
-            "name": "sort",
-            "in": "query",
-            "description": "Sort field(s). Use - prefix for descending order. Allowed: datetime, quote, confirmed, cancel_reason",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "-datetime,quote"
-            }
-          },
-          {
-            "name": "filter[agent_id]",
-            "in": "query",
-            "description": "Filter by agent ID",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[company_id]",
-            "in": "query",
-            "description": "Filter by company ID",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
             "name": "filter[fulltext]",
             "in": "query",
             "description": "Full text search across inspection fields",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[datetime_between]",
-            "in": "query",
-            "description": "Filter by datetime range",
             "required": false,
             "schema": {
               "type": "string"
@@ -134,81 +97,9 @@
             }
           },
           {
-            "name": "filter[agreements_signed]",
-            "in": "query",
-            "description": "Filter by agreements signed status",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
             "name": "filter[confirmed]",
             "in": "query",
             "description": "Filter by confirmed status",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[canceled]",
-            "in": "query",
-            "description": "Filter by canceled status",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[archived_by_inspector]",
-            "in": "query",
-            "description": "Filter by archived status",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[inspector_id]",
-            "in": "query",
-            "description": "Filter by inspector ID",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[service_id]",
-            "in": "query",
-            "description": "Filter by service ID",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[service_category_id]",
-            "in": "query",
-            "description": "Filter by service category ID",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[service_add_on_id]",
-            "in": "query",
-            "description": "Filter by service add-on ID",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[deleted]",
-            "in": "query",
-            "description": "Filter by deleted status",
             "required": false,
             "schema": {
               "type": "boolean"
@@ -221,116 +112,6 @@
             "required": false,
             "schema": {
               "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[include_canceled]",
-            "in": "query",
-            "description": "Include canceled inspections",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[include_archived_by_inspector]",
-            "in": "query",
-            "description": "Include archived inspections",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[include_deleted]",
-            "in": "query",
-            "description": "Include deleted inspections",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[id]",
-            "in": "query",
-            "description": "Filter by inspection ID",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[lat]",
-            "in": "query",
-            "description": "Filter by latitude",
-            "required": false,
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter[lng]",
-            "in": "query",
-            "description": "Filter by longitude",
-            "required": false,
-            "schema": {
-              "type": "number"
-            }
-          },
-          {
-            "name": "filter[build_as_firestore]",
-            "in": "query",
-            "description": "Filter by Firestore build status",
-            "required": false,
-            "schema": {
-              "type": "boolean"
-            }
-          },
-          {
-            "name": "filter[address]",
-            "in": "query",
-            "description": "Filter by address",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[zip]",
-            "in": "query",
-            "description": "Filter by ZIP code",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "filter[unit]",
-            "in": "query",
-            "description": "Filter by unit number",
-            "required": false,
-            "schema": {
-              "type": "string"
-            }
-          },
-          {
-            "name": "include",
-            "in": "query",
-            "description": "Include related resources (comma-separated). Options: buyer, buyer_2, buying_agent, selling_agent, custom_fields, inspection_attachments",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "buyer,property"
-            }
-          },
-          {
-            "name": "fields",
-            "in": "query",
-            "description": "Include additional fields (comma-separated). Options: payments_data, has_deleted_reports",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "example": "payments_data"
             }
           }
         ],
@@ -383,6 +164,137 @@
                           "type": "string",
                           "format": "uri",
                           "example": "https://app-dev.spectora.com/api/v2/inspections?page[number]=4"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/agencies": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "get": {
+        "summary": "List Agencies (v2)",
+        "description": "Retrieves a paginated list of agencies.",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "urlForwardHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "baseUrl": "${env.BASE_URL}/api"
+            }
+          },
+          "policies": {
+            "inbound": [
+              "api-key-inbound",
+              "rate-limit-inbound",
+              "set-secret-key-header",
+              "set-profile-headers"
+            ],
+            "outbound": []
+          }
+        },
+        "operationId": "list-agencies-v2",
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "Page number for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "Number of items per page (max 200)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort field(s). Use - prefix for descending order",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "name"
+            }
+          },
+          {
+            "name": "filter[fulltext]",
+            "in": "query",
+            "description": "Full text search across agency fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with list of agencies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Agency"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "current": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "records": {
+                              "type": "integer",
+                              "example": 25
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/agencies"
+                        },
+                        "current": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/agencies?page[number]=1"
+                        },
+                        "records": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/agencies?page[number]=25"
                         }
                       }
                     }
@@ -659,6 +571,40 @@
                 }
               }
             }
+          }
+        }
+      },
+      "Agency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "8534"
+          },
+          "type": {
+            "type": "string",
+            "enum": ["agency"],
+            "example": "agency"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "company_id": {
+                "type": "integer",
+                "example": 4268
+              },
+              "name": {
+                "type": "string",
+                "example": "Test"
+              },
+              "agent_count": {
+                "type": "integer",
+                "example": 0
+              }
+            }
+          },
+          "relationships": {
+            "type": "object"
           }
         }
       },
