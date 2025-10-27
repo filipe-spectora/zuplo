@@ -55,7 +55,7 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
           name: crypto.randomUUID(),
           managers: [
             {
-              email: userEmail || "hello@example.com",
+              email: body.email || userEmail || "hello@example.com",
               sub: sub,
             },
           ],
