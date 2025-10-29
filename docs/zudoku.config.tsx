@@ -85,6 +85,9 @@ const config: ZudokuConfig = {
       const serverUrl = process.env.ZUDOKU_PUBLIC_ISSUER;
       const accessToken = (auth as any).providerData?.accessToken;
 
+      console.log("------> SERVER URL:", serverUrl);
+      console.log("------> ACCESS TOKEN:", accessToken);
+
       if (!serverUrl) {
         throw new Error("ZUDOKU_PUBLIC_ISSUER is not set");
       }
@@ -117,6 +120,8 @@ const config: ZudokuConfig = {
       if (!response.ok) {
         throw new Error(`Failed to create API key: ${response.statusText}`);
       }
+
+      console.log("------> RESPONSE:", response.json());
     },
     getConsumers: async ({ context, auth }) => {
       console.log("--------> GET CONSUMERS (TO BE IMPLEMENTED", {
