@@ -14,20 +14,6 @@
     },
     {
       "handler": {
-        "export": "OpenIdJwtInboundPolicy",
-        "module": "$import(@zuplo/runtime)",
-        "options": {
-          "audience": "$env(ZUDOKU_PUBLIC_CLIENT_ID)",
-          "issuer": "$env(ZUDOKU_PUBLIC_ISSUER)",
-          "jwkUrl": "$env(ZUDOKU_PUBLIC_ISSUER)/oauth/discovery/keys",
-          "allowUnauthenticatedRequests": false
-        }
-      },
-      "name": "open-id-jwt-auth-inbound",
-      "policyType": "open-id-jwt-auth-inbound"
-    },
-    {
-      "handler": {
         "export": "RateLimitInboundPolicy",
         "module": "$import(@zuplo/runtime)",
         "options": {
