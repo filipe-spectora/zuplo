@@ -121,7 +121,11 @@ const config: ZudokuConfig = {
         throw new Error(`Failed to create API key: ${response.statusText}`);
       }
 
-      console.log("------> RESPONSE:", response.json());
+      const responseData = await response.json();
+
+      console.log("------> RESPONSE:", responseData);
+
+      return responseData;
     },
     getConsumers: async ({ context, auth }) => {
       console.log("--------> GET CONSUMERS (TO BE IMPLEMENTED", {
