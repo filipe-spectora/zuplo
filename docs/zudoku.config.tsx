@@ -1,4 +1,5 @@
-import type { ZudokuConfig } from "zudoku";
+import type { ZudokuConfig, ZudokuContext } from "zudoku";
+import { ApiConsumer } from "zudoku/plugins/api-keys";
 
 /**
  * Developer Portal Configuration
@@ -77,33 +78,23 @@ const config: ZudokuConfig = {
     type: "openid",
     clientId: process.env.ZUDOKU_PUBLIC_CLIENT_ID!,
     issuer: process.env.ZUDOKU_PUBLIC_ISSUER!,
-    scopes: ["openid", "profile", "email", "zuplo_api_keys_create"],
+    scopes: [
+      "openid",
+      "profile",
+      "email",
+      "zuplo_api_keys_write",
+      "zuplo_api_keys_read",
+    ],
   },
   apiKeys: {
     enabled: true,
-    createKey: async ({ apiKey, auth }) => {
-      const serverUrl = process.env.ZUDOKU_PUBLIC_ISSUER;
-      const accessToken = (auth as any).providerData?.accessToken;
+    // Reference: https://zuplo.com/docs/dev-portal/zudoku/guides/managing-api-keys-and-identities
+    createKey: async ({ apiKey, context }): Promise<void> => {
+      const serverUrl = getServerUrl();
 
-      console.log("------> SERVER URL:", serverUrl);
-      console.log("------> ACCESS TOKEN:", accessToken);
-
-      if (!serverUrl) {
-        throw new Error("ZUDOKU_PUBLIC_ISSUER is not set");
-      }
-
-      if (!accessToken) {
-        throw new Error("Access token is not set");
-      }
-
-      const createApiKeyRequest = new Request(
-        `${serverUrl}/api/v2/zuplo/api_keys`,
-        {
+      const createApiKeyRequest = await context.signRequest(
+        new Request(`${serverUrl}/api/v2/zuplo/api_keys`, {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${accessToken}`,
-          },
           body: JSON.stringify({
             data: {
               attributes: {
@@ -112,7 +103,7 @@ const config: ZudokuConfig = {
               },
             },
           }),
-        }
+        })
       );
 
       const response = await fetch(createApiKeyRequest);
@@ -124,18 +115,36 @@ const config: ZudokuConfig = {
       const responseData = await response.json();
 
       console.log("------> RESPONSE:", responseData);
-
-      return responseData;
     },
-    getConsumers: async ({ context, auth }) => {
-      console.log("--------> GET CONSUMERS (TO BE IMPLEMENTED", {
-        context,
-        auth,
-      });
+    getConsumers: async (context: ZudokuContext): Promise<ApiConsumer[]> => {
+      const serverUrl = getServerUrl();
 
-      return [];
+      const request = await context.signRequest(
+        new Request(`${serverUrl}/api/v2/zuplo/api_keys`)
+      );
+
+      const response = await fetch(request);
+      const { data } = await response.json();
+
+      return data;
+    },
+    rollKey: async (consumerId, context) => {
+      // TODO: To be implemented
+      console.log("------> ROLL KEY:", { consumerId, context });
     },
   },
+};
+
+const getServerUrl = (): string => {
+  const serverUrl = process.env.ZUDOKU_PUBLIC_ISSUER;
+
+  console.log("------> SERVER URL:", serverUrl);
+
+  if (!serverUrl) {
+    throw new Error("ZUDOKU_PUBLIC_ISSUER environment variable is not set");
+  }
+
+  return serverUrl;
 };
 
 export default config;
