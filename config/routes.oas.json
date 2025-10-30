@@ -321,9 +321,7 @@
           },
           "type": {
             "type": "string",
-            "enum": [
-              "inspection"
-            ],
+            "enum": ["inspection"],
             "example": "inspection"
           },
           "attributes": {
@@ -348,10 +346,7 @@
                 "example": false
               },
               "order_id": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "description": {
@@ -368,17 +363,11 @@
                 "type": "string"
               },
               "request_notes": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "published_at": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "format": "date-time",
                 "nullable": true
               },
@@ -391,37 +380,25 @@
                 "format": "date-time"
               },
               "cover_photo_url": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "cover_photo_thumb_url": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "archived_by_inspector": {
                 "type": "boolean"
               },
               "deleted_at": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "confirmed": {
                 "type": "boolean"
               },
               "canceled_at": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "datetime_formatted": {
@@ -477,17 +454,11 @@
                 "example": "Stephanie West"
               },
               "buying_agent_id": {
-                "type": [
-                  "integer",
-                  "null"
-                ],
+                "type": ["integer", "null"],
                 "nullable": true
               },
               "selling_agent_id": {
-                "type": [
-                  "integer",
-                  "null"
-                ],
+                "type": ["integer", "null"],
                 "nullable": true
               },
               "service_names": {
@@ -503,31 +474,19 @@
                 "example": "Jane Doe"
               },
               "cancel_reason": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "isn_id": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               },
               "payment_method_provided": {
-                "type": [
-                  "boolean",
-                  "null"
-                ],
+                "type": ["boolean", "null"],
                 "nullable": true
               },
               "is_client_complete": {
-                "type": [
-                  "boolean",
-                  "null"
-                ],
+                "type": ["boolean", "null"],
                 "nullable": true
               },
               "tooltip": {
@@ -537,10 +496,7 @@
                 "type": "object",
                 "properties": {
                   "source_report_view_slug": {
-                    "type": [
-                      "string",
-                      "null"
-                    ],
+                    "type": ["string", "null"],
                     "nullable": true
                   },
                   "source_inspection_copy_reports": {
@@ -555,10 +511,7 @@
                 }
               },
               "charge_at_formatted": {
-                "type": [
-                  "string",
-                  "null"
-                ],
+                "type": ["string", "null"],
                 "nullable": true
               }
             }
@@ -577,9 +530,7 @@
                       },
                       "type": {
                         "type": "string",
-                        "enum": [
-                          "company"
-                        ]
+                        "enum": ["company"]
                       }
                     }
                   }
@@ -596,9 +547,7 @@
                       },
                       "type": {
                         "type": "string",
-                        "enum": [
-                          "property"
-                        ]
+                        "enum": ["property"]
                       }
                     }
                   }
@@ -617,9 +566,7 @@
                         },
                         "type": {
                           "type": "string",
-                          "enum": [
-                            "assignment"
-                          ]
+                          "enum": ["assignment"]
                         }
                       }
                     }
@@ -639,9 +586,7 @@
           },
           "type": {
             "type": "string",
-            "enum": [
-              "agency"
-            ],
+            "enum": ["agency"],
             "example": "agency"
           },
           "attributes": {
