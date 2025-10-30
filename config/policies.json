@@ -48,6 +48,22 @@
       },
       "name": "set-profile-headers",
       "policyType": "custom-code-inbound"
+    },
+    {
+      "handler": {
+        "export": "SetHeadersInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "headers": [
+            {
+              "name": "Content-Type",
+              "value": "application/json"
+            }
+          ]
+        }
+      },
+      "name": "set-application-json-content-type",
+      "policyType": "set-headers-inbound"
     }
   ]
 }
