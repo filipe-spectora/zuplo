@@ -11,7 +11,7 @@
       },
       "get": {
         "summary": "List Inspections (v2)",
-        "description": "",
+        "description": "Retrieves a paginated list of inspections.",
         "x-zuplo-route": {
           "corsPolicy": "none",
           "handler": {
@@ -31,7 +31,665 @@
             "outbound": []
           }
         },
-        "operationId": "new-route-8f476660"
+        "operationId": "list-inspections-v2",
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "Page number for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "Number of items per page (max 200)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            }
+          },
+          {
+            "name": "filter[fulltext]",
+            "in": "query",
+            "description": "Full text search across inspection fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "filter[paid]",
+            "in": "query",
+            "description": "Filter by paid status",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "filter[confirmed]",
+            "in": "query",
+            "description": "Filter by confirmed status",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          },
+          {
+            "name": "filter[published]",
+            "in": "query",
+            "description": "Filter by published status",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with list of inspections",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Inspection"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "current": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "records": {
+                              "type": "integer",
+                              "example": 4
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/inspections"
+                        },
+                        "current": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/inspections?page[number]=1"
+                        },
+                        "records": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/inspections?page[number]=4"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v2/agencies": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "get": {
+        "summary": "List Agencies (v2)",
+        "description": "Retrieves a paginated list of agencies.",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "urlForwardHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "baseUrl": "${env.BASE_URL}/api"
+            }
+          },
+          "policies": {
+            "inbound": [
+              "api-key-inbound",
+              "rate-limit-inbound",
+              "set-secret-key-header",
+              "set-profile-headers"
+            ],
+            "outbound": []
+          }
+        },
+        "operationId": "list-agencies-v2",
+        "parameters": [
+          {
+            "name": "page[number]",
+            "in": "query",
+            "description": "Page number for pagination",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            }
+          },
+          {
+            "name": "page[size]",
+            "in": "query",
+            "description": "Number of items per page (max 200)",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 200,
+              "default": 200
+            }
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "description": "Sort field(s). Use - prefix for descending order",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "example": "name"
+            }
+          },
+          {
+            "name": "filter[fulltext]",
+            "in": "query",
+            "description": "Full text search across agency fields",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with list of agencies",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Agency"
+                      }
+                    },
+                    "meta": {
+                      "type": "object",
+                      "properties": {
+                        "pagination": {
+                          "type": "object",
+                          "properties": {
+                            "current": {
+                              "type": "integer",
+                              "example": 1
+                            },
+                            "records": {
+                              "type": "integer",
+                              "example": 25
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "links": {
+                      "type": "object",
+                      "properties": {
+                        "self": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/agencies"
+                        },
+                        "current": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/agencies?page[number]=1"
+                        },
+                        "records": {
+                          "type": "string",
+                          "format": "uri",
+                          "example": "https://app-dev.spectora.com/api/v2/agencies?page[number]=25"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Agency",
+        "description": "",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "urlForwardHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "baseUrl": "${env.BASE_URL}/api"
+            }
+          },
+          "policies": {
+            "inbound": [
+              "api-key-inbound",
+              "rate-limit-inbound",
+              "set-application-json-content-type",
+              "set-secret-key-header",
+              "set-profile-headers"
+            ]
+          }
+        },
+        "operationId": "create-agency-v2",
+        "x-internal": false
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Inspection": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "172260"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "inspection"
+            ],
+            "example": "inspection"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "slug": {
+                "type": "string",
+                "format": "uuid",
+                "example": "1c1d5920-18e7-4801-a376-a300198e7367"
+              },
+              "datetime": {
+                "type": "string",
+                "format": "date-time",
+                "example": "2025-10-25T05:00:00.000-06:00"
+              },
+              "duration": {
+                "type": "number",
+                "example": 2.5
+              },
+              "paid": {
+                "type": "boolean",
+                "example": false
+              },
+              "order_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "description": {
+                "type": "string",
+                "example": "Residential Template"
+              },
+              "agreements_present": {
+                "type": "boolean"
+              },
+              "agreements_signed": {
+                "type": "boolean"
+              },
+              "notes": {
+                "type": "string"
+              },
+              "request_notes": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "published_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "format": "date-time",
+                "nullable": true
+              },
+              "created_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "updated_at": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "cover_photo_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "cover_photo_thumb_url": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "archived_by_inspector": {
+                "type": "boolean"
+              },
+              "deleted_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "confirmed": {
+                "type": "boolean"
+              },
+              "canceled_at": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "datetime_formatted": {
+                "type": "string",
+                "example": "25/10/2025  8:00 am"
+              },
+              "buyer_name": {
+                "type": "string",
+                "example": "Jane Doe"
+              },
+              "full_address": {
+                "type": "string",
+                "example": "981 Denver Blvd, San Antonio, TX 78210"
+              },
+              "property_address": {
+                "type": "string",
+                "example": "981 Denver Blvd"
+              },
+              "property_address_2": {
+                "type": "string",
+                "example": "San Antonio, TX 78210"
+              },
+              "image_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "quote": {
+                "type": "string",
+                "example": "450.0"
+              },
+              "buying_agent_name": {
+                "type": "string"
+              },
+              "selling_agent_name": {
+                "type": "string"
+              },
+              "buying_agent_email": {
+                "type": "string",
+                "format": "email"
+              },
+              "buying_agent_phone": {
+                "type": "string"
+              },
+              "selling_agent_email": {
+                "type": "string",
+                "format": "email"
+              },
+              "selling_agent_phone": {
+                "type": "string"
+              },
+              "inspector_name": {
+                "type": "string",
+                "example": "Stephanie West"
+              },
+              "buying_agent_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "selling_agent_id": {
+                "type": [
+                  "integer",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "service_names": {
+                "type": "string",
+                "example": "Residential Inspection"
+              },
+              "service_add_on_names": {
+                "type": "string",
+                "example": "Pool Inspection"
+              },
+              "buyer_names": {
+                "type": "string",
+                "example": "Jane Doe"
+              },
+              "cancel_reason": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "isn_id": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "payment_method_provided": {
+                "type": [
+                  "boolean",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "is_client_complete": {
+                "type": [
+                  "boolean",
+                  "null"
+                ],
+                "nullable": true
+              },
+              "tooltip": {
+                "type": "string"
+              },
+              "settings": {
+                "type": "object",
+                "properties": {
+                  "source_report_view_slug": {
+                    "type": [
+                      "string",
+                      "null"
+                    ],
+                    "nullable": true
+                  },
+                  "source_inspection_copy_reports": {
+                    "type": "boolean"
+                  },
+                  "build_as_firestore": {
+                    "type": "boolean"
+                  },
+                  "enable_auto_tracks": {
+                    "type": "boolean"
+                  }
+                }
+              },
+              "charge_at_formatted": {
+                "type": [
+                  "string",
+                  "null"
+                ],
+                "nullable": true
+              }
+            }
+          },
+          "relationships": {
+            "type": "object",
+            "properties": {
+              "company": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "company"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "property": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "object",
+                    "properties": {
+                      "id": {
+                        "type": "string"
+                      },
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "property"
+                        ]
+                      }
+                    }
+                  }
+                }
+              },
+              "assignments": {
+                "type": "object",
+                "properties": {
+                  "data": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string"
+                        },
+                        "type": {
+                          "type": "string",
+                          "enum": [
+                            "assignment"
+                          ]
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "Agency": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string",
+            "example": "8534"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "agency"
+            ],
+            "example": "agency"
+          },
+          "attributes": {
+            "type": "object",
+            "properties": {
+              "company_id": {
+                "type": "integer",
+                "example": 4268
+              },
+              "name": {
+                "type": "string",
+                "example": "Test"
+              },
+              "agent_count": {
+                "type": "integer",
+                "example": 0
+              }
+            }
+          },
+          "relationships": {
+            "type": "object"
+          }
+        }
+      },
+      "Error": {
+        "type": "object",
+        "properties": {
+          "errors": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "title": {
+                  "type": "string",
+                  "description": "Error title"
+                },
+                "status": {
+                  "type": "integer",
+                  "description": "HTTP status code"
+                },
+                "detail": {
+                  "type": "string",
+                  "description": "Error detail message"
+                }
+              }
+            }
+          }
+        }
       }
     }
   }
