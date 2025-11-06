@@ -5,28 +5,6 @@
     "title": "My Zuplo API"
   },
   "paths": {
-    "/v1/developer/api-key": {
-      "x-zuplo-path": {
-        "pathMode": "open-api"
-      },
-      "post": {
-        "summary": "Create API Key",
-        "description": "Creates a new API key for the authenticated user",
-        "x-zuplo-route": {
-          "corsPolicy": "anything-goes",
-          "handler": {
-            "export": "default",
-            "module": "$import(./modules/api-keys)",
-            "options": {}
-          },
-          "policies": {
-            "inbound": ["open-id-jwt-auth-inbound"]
-          }
-        },
-        "operationId": "create-api-key-endpoint",
-        "x-internal": true
-      }
-    },
     "/v2/inspections": {
       "x-zuplo-path": {
         "pathMode": "open-api"
@@ -306,8 +284,8 @@
         }
       },
       "post": {
-        "summary": "Create Agency (v2)",
-        "description": "Creates a new agency.",
+        "summary": "Create Agency",
+        "description": "",
         "x-zuplo-route": {
           "corsPolicy": "none",
           "handler": {
@@ -321,93 +299,14 @@
             "inbound": [
               "api-key-inbound",
               "rate-limit-inbound",
+              "set-application-json-content-type",
               "set-secret-key-header",
               "set-profile-headers"
-            ],
-            "outbound": []
+            ]
           }
         },
         "operationId": "create-agency-v2",
-        "requestBody": {
-          "description": "Agency creation payload",
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": ["data"],
-                "properties": {
-                  "data": {
-                    "type": "object",
-                    "required": ["attributes"],
-                    "properties": {
-                      "attributes": {
-                        "type": "object",
-                        "required": ["name"],
-                        "properties": {
-                          "name": {
-                            "type": "string",
-                            "description": "The name of the agency",
-                            "example": "Test Agency"
-                          }
-                        }
-                      }
-                    }
-                  }
-                },
-                "example": {
-                  "data": {
-                    "attributes": {
-                      "name": "Test Agency"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Agency successfully created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "data": {
-                      "$ref": "#/components/schemas/Agency"
-                    },
-                    "links": {
-                      "type": "object",
-                      "properties": {
-                        "self": {
-                          "type": "string",
-                          "format": "uri",
-                          "example": "https://app-dev.spectora.com/api/v2/agencies"
-                        }
-                      }
-                    }
-                  },
-                  "example": {
-                    "data": {
-                      "id": "8535",
-                      "type": "agency",
-                      "attributes": {
-                        "company_id": 4268,
-                        "name": "Test Agency",
-                        "agent_count": 0
-                      },
-                      "relationships": {}
-                    },
-                    "links": {
-                      "self": "https://app-dev.spectora.com/api/v2/agencies"
-                    }
-                  }
-                }
-              }
-            }
-          }
-        }
+        "x-internal": false
       }
     }
   },

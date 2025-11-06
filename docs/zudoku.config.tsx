@@ -1,4 +1,5 @@
-import type { ZudokuConfig } from "zudoku";
+import type { ZudokuConfig, ZudokuContext } from "zudoku";
+import { ApiConsumer } from "zudoku/plugins/api-keys";
 
 /**
  * Developer Portal Configuration
@@ -77,107 +78,73 @@ const config: ZudokuConfig = {
     type: "openid",
     clientId: process.env.ZUDOKU_PUBLIC_CLIENT_ID!,
     issuer: process.env.ZUDOKU_PUBLIC_ISSUER!,
-    scopes: ["openid", "profile", "email"],
+    scopes: [
+      "openid",
+      "profile",
+      "email",
+      "zuplo_api_keys_write",
+      "zuplo_api_keys_read",
+    ],
   },
   apiKeys: {
     enabled: true,
-    createKey: async ({ apiKey, context, auth }) => {
-      // Use the deployment URL from environment variable
-      const deploymentName = process.env.ZUDOKU_PUBLIC_DEPLOYMENT_NAME;
+    // Reference: https://zuplo.com/docs/dev-portal/zudoku/guides/managing-api-keys-and-identities
+    createKey: async ({ apiKey, context }): Promise<void> => {
+      const serverUrl = getServerUrl();
 
-      // process.env.ZUPLO_PUBLIC_SERVER_URL is only required for local development
-      // import.meta.env.ZUPLO_SERVER_URL is automatically set when using a deployed environment, you do not need to set it
-      const serverUrl =
-        process.env.ZUPLO_PUBLIC_SERVER_URL ||
-        import.meta.env.ZUPLO_SERVER_URL ||
-        `https://${deploymentName}.zuplo.site`;
-
-      // Get the JWT token from the auth provider data
-      const jwtToken = (auth as any).providerData?.idToken;
-      const accessToken = (auth as any).providerData?.accessToken;
-
-      if (!jwtToken) {
-        console.error("No JWT token available from auth provider", auth);
-        throw new Error("Authentication token not found");
-      }
-
-      let spectora_profile_id = 0;
-      let spectora_profile_type = 0;
-      let spectora_company_id = 0;
-
-      if (accessToken) {
-        try {
-          const userInfoResponse = await fetch(
-            `${process.env.ZUDOKU_PUBLIC_ISSUER}/oauth/userinfo`,
-            {
-              headers: {
-                Authorization: `Bearer ${accessToken}`,
-              },
-            }
-          );
-
-          if (userInfoResponse.ok) {
-            const userInfo = await userInfoResponse.json();
-
-            spectora_profile_id = userInfo.profile_id;
-            spectora_profile_type = userInfo.profile_type;
-            spectora_company_id = userInfo.company_id;
-          } else {
-            console.warn(
-              "Failed to fetch userinfo:",
-              await userInfoResponse.text()
-            );
-          }
-        } catch (error) {
-          console.warn("Error fetching userinfo:", error);
-          // Continue without profile metadata if fetch fails
-        }
-      }
-
-      const createApiKeyRequest = new Request(
-        serverUrl + "/v1/developer/api-key",
-        {
+      const createApiKeyRequest = await context.signRequest(
+        new Request(`${serverUrl}/api/v2/zuplo/api_keys`, {
           method: "POST",
           body: JSON.stringify({
-            ...apiKey,
-            email: auth.profile?.email,
-            metadata: {
-              spectora_profile_id,
-              spectora_profile_type,
-            },
-            tags: {
-              // Zuplo expects keys as camelCase
-              spectoraCompanyId: spectora_company_id,
+            data: {
+              attributes: {
+                description: apiKey.description,
+                expires_at: apiKey.expiresOn,
+              },
             },
           }),
-          headers: {
-            "Content-Type": "application/json",
-            Authorization: `Bearer ${jwtToken}`,
-          },
-        }
+        })
       );
 
-      // Don't use context.signRequest() as we need to pass the user's JWT token
-      const createApiKey = await fetch(createApiKeyRequest);
+      const response = await fetch(createApiKeyRequest);
 
-      if (!createApiKey.ok) {
-        const errorText = await createApiKey.text();
-        console.error("Failed to create API key:", errorText);
-        throw new Error("Could not create API Key");
+      if (!response.ok) {
+        throw new Error(`Failed to create API key: ${response.statusText}`);
       }
 
-      // Return void as required by the type definition
-      return;
-    },
-    getConsumers: async ({ context, auth }) => {
-      console.log("--------> GET CONSUMERS (TO BE IMPLEMENTED", {
-        context,
-        auth,
-      });
+      const responseData = await response.json();
 
-      return [];
+      console.log("------> RESPONSE:", responseData);
+    },
+    getConsumers: async (context: ZudokuContext): Promise<ApiConsumer[]> => {
+      const serverUrl = getServerUrl();
+
+      const request = await context.signRequest(
+        new Request(`${serverUrl}/api/v2/zuplo/api_keys`)
+      );
+
+      const response = await fetch(request);
+      const { data } = await response.json();
+
+      return data;
+    },
+    rollKey: async (consumerId, context) => {
+      // TODO: To be implemented
+      console.log("------> ROLL KEY:", { consumerId, context });
     },
   },
+};
+
+const getServerUrl = (): string => {
+  const serverUrl = process.env.ZUDOKU_PUBLIC_ISSUER;
+
+  console.log("------> SERVER URL:", serverUrl);
+
+  if (!serverUrl) {
+    throw new Error("ZUDOKU_PUBLIC_ISSUER environment variable is not set");
+  }
+
+  return serverUrl;
 };
 
 export default config;
