@@ -72,7 +72,7 @@
         "options": {
           "allowUnauthenticatedRequests": false,
           "cacheTtlSeconds": 60,
-          "bucketName": "working-copy-rotation"
+          "bucketName": "$env(ROTATION_BUCKET_NAME)"
         }
       },
       "name": "rotation-api-key-inbound",

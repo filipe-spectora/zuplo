@@ -4,10 +4,6 @@ export default async function (request: ZuploRequest, context: ZuploContext) {
   const profile_id = request.user.data["spectora_profile_id"];
   const profile_type = request.user.data["spectora_profile_type"];
 
-  console.log("CREDENTIALS:", request.credentials);
-  console.log("USER:", request.user);
-
-
   context.log.info(`Profile ID: ${profile_id}`);
   context.log.info(`Profile Type: ${profile_type}`);
 
