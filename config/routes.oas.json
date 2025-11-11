@@ -308,6 +308,35 @@
         "operationId": "create-agency-v2",
         "x-internal": false
       }
+    },
+    "/v2/zuplo/api_keys/rotate": {
+      "x-zuplo-path": {
+        "pathMode": "open-api"
+      },
+      "post": {
+        "summary": "Rotate API key",
+        "description": "",
+        "x-zuplo-route": {
+          "corsPolicy": "none",
+          "handler": {
+            "export": "urlForwardHandler",
+            "module": "$import(@zuplo/runtime)",
+            "options": {
+              "baseUrl": "${env.BASE_URL}/api"
+            }
+          },
+          "policies": {
+            "inbound": [
+              "rotation-api-key-inbound",
+              "rotation-rate-limit-inbound",
+              "set-application-json-content-type",
+              "set-secret-key-header",
+              "set-profile-headers"
+            ]
+          }
+        },
+        "operationId": "new-route-ad6228e2"
+      }
     }
   },
   "components": {
