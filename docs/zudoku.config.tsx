@@ -95,6 +95,9 @@ const config: ZudokuConfig = {
       const createApiKeyRequest = await context.signRequest(
         new Request(`${serverUrl}/api/v2/zuplo/api_keys`, {
           method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
           body: JSON.stringify({
             data: {
               attributes: {
@@ -129,7 +132,6 @@ const config: ZudokuConfig = {
       return data;
     },
     rollKey: async (consumerId, context) => {
-      // TODO: To be implemented
       console.log("------> ROLL KEY:", { consumerId, context });
     },
   },
