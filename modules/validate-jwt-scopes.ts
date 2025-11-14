@@ -1,4 +1,5 @@
 import { ZuploContext, ZuploRequest } from "@zuplo/runtime";
+import { isJwtRequest, getUserData } from "../utils/auth-utils";
 
 /**
  * Validates JWT token scopes for endpoints that require specific permissions.
@@ -19,10 +20,7 @@ import { ZuploContext, ZuploRequest } from "@zuplo/runtime";
  *   }
  * }
  */
-export default async function (
-  request: ZuploRequest,
-  context: ZuploContext
-) {
+export default async function (request: ZuploRequest, context: ZuploContext) {
   // Get required scopes from route metadata
   const routeData = context.route.raw<{ "x-required-scopes"?: string[] }>();
   const requiredScopes = routeData["x-required-scopes"] || [];
@@ -30,14 +28,12 @@ export default async function (
   // Skip validation if no scopes are required for this route
   if (requiredScopes.length === 0) {
     context.log.info("No scope validation required for this route");
+
     return request;
   }
 
-  const { data: userData } = request?.user ?? {};
-
   // Skip validation if not a JWT request
-  // JWT tokens have 'iss' (issuer) or 'jti' (JWT ID) claims
-  if (!userData.iss && !userData.jti) {
+  if (!isJwtRequest(request)) {
     context.log.info(
       "Skipping JWT scope validation - not a JWT request (API key authentication)"
     );
@@ -49,7 +45,7 @@ export default async function (
 
   // Extract scopes from JWT token
   // Scopes are stored in the 'scope' claim as a space-separated string
-  const scopeClaim = userData.scope || "";
+  const scopeClaim = getUserData(request).scope || "";
   const userScopes = scopeClaim.split(" ").filter(Boolean);
 
   context.log.info(`User scopes: ${userScopes.join(", ")}`);
@@ -61,24 +57,22 @@ export default async function (
   );
 
   if (missingScopes.length > 0) {
-    context.log.warn(
-      `Missing required scopes: ${missingScopes.join(", ")}`
-    );
+    context.log.warn(`Missing required scopes: ${missingScopes.join(", ")}`);
 
     return new Response(
       JSON.stringify({
-        code: "UNAUTHORIZED",
+        code: "FORBIDDEN",
         message: `JWT must have all the following scopes: ${requiredScopes.join(", ")}`,
-        missing_scopes: missingScopes
+        missing_scopes: missingScopes,
       }),
       {
         status: 403,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       }
     );
   }
 
   context.log.info("JWT scope validation passed");
-  
+
   return request;
 }

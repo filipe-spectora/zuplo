@@ -1,4 +1,5 @@
 import { ZuploContext, ZuploRequest } from "@zuplo/runtime";
+import { isAuthenticated } from "../utils/auth-utils";
 
 /**
  * Validates that at least one authentication method succeeded.
@@ -11,20 +12,16 @@ import { ZuploContext, ZuploRequest } from "@zuplo/runtime";
  * If neither authentication method succeeded, returns 401 Unauthorized.
  */
 export default async function (request: ZuploRequest, context: ZuploContext) {
-  const { data: userData } = request?.user ?? {};
-
-  // Check if at least one authentication method succeeded
-  if (!userData || Object.keys(userData).length === 0) {
-    context.log.warn("No authentication method provided");
-
+  if (!isAuthenticated(request)) {
     return new Response(
       JSON.stringify({
         code: "UNAUTHORIZED",
-        message: "Authentication required. Please provide a valid API key or JWT token."
+        message:
+          "Authentication required. Please provide a valid API key or JWT token.",
       }),
       {
         status: 401,
-        headers: { "Content-Type": "application/json" }
+        headers: { "Content-Type": "application/json" },
       }
     );
   }
