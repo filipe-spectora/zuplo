@@ -5,7 +5,7 @@
         "export": "ApiKeyInboundPolicy",
         "module": "$import(@zuplo/runtime)",
         "options": {
-          "allowUnauthenticatedRequests": false,
+          "allowUnauthenticatedRequests": true,
           "cacheTtlSeconds": 60
         }
       },
@@ -90,6 +90,36 @@
       },
       "name": "rotation-rate-limit-inbound",
       "policyType": "rate-limit-inbound"
+    },
+    {
+      "handler": {
+        "export": "OpenIdJwtInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "audience": "$env(AUTH_AUDIENCE)",
+          "issuer": "$env(AUTH_ISSUER)",
+          "jwkUrl": "$env(JWKS_URL)",
+          "allowUnauthenticatedRequests": true
+        }
+      },
+      "name": "open-id-jwt-auth-inbound",
+      "policyType": "open-id-jwt-auth-inbound"
+    },
+    {
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/validate-authentication)"
+      },
+      "name": "validate-authentication",
+      "policyType": "custom-code-inbound"
+    },
+    {
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/validate-jwt-scopes)"
+      },
+      "name": "validate-jwt-scopes",
+      "policyType": "custom-code-inbound"
     }
   ]
 }
