@@ -27,26 +27,10 @@
     },
     {
       "handler": {
-        "export": "SetHeadersInboundPolicy",
-        "module": "$import(@zuplo/runtime)",
-        "options": {
-          "headers": [
-            {
-              "name": "X-Zuplo-Secret-Key",
-              "value": "$env(SECRET_KEY)"
-            }
-          ]
-        }
-      },
-      "name": "set-secret-key-header",
-      "policyType": "set-headers-inbound"
-    },
-    {
-      "handler": {
         "export": "default",
-        "module": "$import(./modules/set-profile-headers)"
+        "module": "$import(./modules/set-headers)"
       },
-      "name": "set-profile-headers",
+      "name": "set-headers",
       "policyType": "custom-code-inbound"
     },
     {
