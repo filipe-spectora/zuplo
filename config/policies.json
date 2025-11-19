@@ -5,7 +5,7 @@
         "export": "ApiKeyInboundPolicy",
         "module": "$import(@zuplo/runtime)",
         "options": {
-          "allowUnauthenticatedRequests": false,
+          "allowUnauthenticatedRequests": true,
           "cacheTtlSeconds": 60
         }
       },
@@ -27,26 +27,10 @@
     },
     {
       "handler": {
-        "export": "SetHeadersInboundPolicy",
-        "module": "$import(@zuplo/runtime)",
-        "options": {
-          "headers": [
-            {
-              "name": "X-Zuplo-Secret-Key",
-              "value": "$env(SECRET_KEY)"
-            }
-          ]
-        }
-      },
-      "name": "set-secret-key-header",
-      "policyType": "set-headers-inbound"
-    },
-    {
-      "handler": {
         "export": "default",
-        "module": "$import(./modules/set-profile-headers)"
+        "module": "$import(./modules/set-headers)"
       },
-      "name": "set-profile-headers",
+      "name": "set-headers",
       "policyType": "custom-code-inbound"
     },
     {
@@ -90,6 +74,36 @@
       },
       "name": "rotation-rate-limit-inbound",
       "policyType": "rate-limit-inbound"
+    },
+    {
+      "handler": {
+        "export": "OpenIdJwtInboundPolicy",
+        "module": "$import(@zuplo/runtime)",
+        "options": {
+          "audience": "$env(AUTH_AUDIENCE)",
+          "issuer": "$env(AUTH_ISSUER)",
+          "jwkUrl": "$env(JWKS_URL)",
+          "allowUnauthenticatedRequests": true
+        }
+      },
+      "name": "open-id-jwt-auth-inbound",
+      "policyType": "open-id-jwt-auth-inbound"
+    },
+    {
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/validate-authentication)"
+      },
+      "name": "validate-authentication",
+      "policyType": "custom-code-inbound"
+    },
+    {
+      "handler": {
+        "export": "default",
+        "module": "$import(./modules/validate-jwt-scopes)"
+      },
+      "name": "validate-jwt-scopes",
+      "policyType": "custom-code-inbound"
     }
   ]
 }

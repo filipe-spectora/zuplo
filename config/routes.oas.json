@@ -12,6 +12,7 @@
       "get": {
         "summary": "List Inspections (v2)",
         "description": "Retrieves a paginated list of inspections.",
+        "x-required-scopes": ["v2_inspections_index"],
         "x-zuplo-route": {
           "corsPolicy": "none",
           "handler": {
@@ -24,9 +25,11 @@
           "policies": {
             "inbound": [
               "api-key-inbound",
+              "open-id-jwt-auth-inbound",
+              "validate-authentication",
+              "validate-jwt-scopes",
               "rate-limit-inbound",
-              "set-secret-key-header",
-              "set-profile-headers"
+              "set-headers"
             ],
             "outbound": []
           }
@@ -160,6 +163,7 @@
       "get": {
         "summary": "List Agencies (v2)",
         "description": "Retrieves a paginated list of agencies.",
+        "x-required-scopes": ["v2_agencies_index"],
         "x-zuplo-route": {
           "corsPolicy": "none",
           "handler": {
@@ -172,9 +176,11 @@
           "policies": {
             "inbound": [
               "api-key-inbound",
+              "open-id-jwt-auth-inbound",
+              "validate-authentication",
+              "validate-jwt-scopes",
               "rate-limit-inbound",
-              "set-secret-key-header",
-              "set-profile-headers"
+              "set-headers"
             ],
             "outbound": []
           }
@@ -286,6 +292,7 @@
       "post": {
         "summary": "Create Agency",
         "description": "",
+        "x-required-scopes": ["v2_agencies_create"],
         "x-zuplo-route": {
           "corsPolicy": "none",
           "handler": {
@@ -298,10 +305,12 @@
           "policies": {
             "inbound": [
               "api-key-inbound",
+              "open-id-jwt-auth-inbound",
+              "validate-authentication",
+              "validate-jwt-scopes",
               "rate-limit-inbound",
               "set-application-json-content-type",
-              "set-secret-key-header",
-              "set-profile-headers"
+              "set-headers"
             ]
           }
         },
@@ -330,8 +339,7 @@
               "rotation-api-key-inbound",
               "rotation-rate-limit-inbound",
               "set-application-json-content-type",
-              "set-secret-key-header",
-              "set-profile-headers"
+              "set-headers"
             ]
           }
         },
